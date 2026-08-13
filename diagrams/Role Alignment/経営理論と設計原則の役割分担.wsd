@@ -1,0 +1,47 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+
+@startuml
+skinparam defaultTextAlignment center
+skinparam ArrowThickness 2
+skinparam node {
+    BorderColor #5D6D7E
+}
+skinparam rectangle {
+    RoundCorner 8
+}
+
+title 経営理論と設計原則の役割分担 (Role Alignment)
+
+'=== 左側：古典的経営理論の守備範囲 ===
+rectangle "<b>既存の経営理論の領域</b>\nClassical Management Theories\n(SWOT, PEST, KPI, etc.)" as Business #EBF5FB {
+    node "<b>要求定義 (What / Why)</b>\n自社は何を作るべきか、なぜ戦うのか\n(Strategy & Requirements)" as Req
+}
+
+'=== 右側：CAaOの守備範囲 ===
+rectangle "<b>設計原則の領域 (CAaO)</b>\nClean Architecture as Organizations\n(SOLID, 4 Layers, SLAP, etc.)" as Architecture #E8F8F5 {
+    node "<b>構造実装 (How)</b>\n依存・権限・抽象度をどう配線するか\n(Structure & Architecture)" as Struct
+    node "<b>静的解析 (Static Analysis)</b>\n実行前に組織のバグを検知する\n(Error Detection before Execution)" as Compile
+}
+
+'=== 実行フェーズ ===
+node "<b>実行・稼働 (Execution)</b>\n市場への価値提供\n(Value Delivery)" as Exec #FEF9E7
+
+'=== フロー ===
+Req -[#2980B9]right-> Struct : 戦略のインプット\n(Strategy Input)
+Struct -[#1E8449]down-> Compile : 構造の検査\n(Inspection)
+Compile -[#1E8449]up-> Struct : エラーフィードバック\n(SRP/DIP違反等)\n(Error Feedback)
+Compile -[#F39C12]down-> Exec : <b>バグのない構造で実行</b>\n(Execute with Solid Structure)
+
+'=== 失敗のルート（従来の組織） ===
+Req -[#E74C3C,dashed]down-> Exec : <b>【従来の経路 / Traditional route】</b>\n実装構造(How)を静的解析せず\n戦略(What)を直接現場に投下しクラッシュ\n(Crash in execution phase)
+
+@enduml

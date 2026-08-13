@@ -1,0 +1,75 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml
+title 【LSP準拠】コンプライアンス機能の正しい代替設計\n"振る舞いの約束を満たすための構造的条件を定義している"\n[LSP Compliant - Proper Substitution Design for Compliance Function]\n"Defines Structural Conditions to Fulfill Behavioral Contract"
+
+skinparam backgroundColor #FAFAFA
+skinparam DefaultFontName sans-serif
+skinparam padding 8
+
+skinparam interface {
+    BackgroundColor #E8F5E9
+    BorderColor #2E7D32
+}
+skinparam class {
+    BackgroundColor #FFFFFF
+    BorderColor #546E7A
+}
+skinparam note {
+    BackgroundColor #E8F5E9
+    BorderColor #2E7D32
+}
+
+interface "«Interface»\nコンプライアンス機能\n(Compliance Function)" as IComp {
+    + 独立した法的リスク判定()\n  / Independent legal risk assessment()
+    + 経営判断への情報提供()\n  / Provision of info for management decisions()
+    + 社会的説明責任の担保()\n  / Guaranteeing social accountability()
+    --
+    «契約条件 / Contract Conditions»
+    - 判定者は事業部から独立していること\n  / Evaluator independent from BUs
+    - 判定根拠は外部基準（法・規範）に準拠\n  / Grounds conform to external norms/laws
+    - 判定結果は変更・圧力から保護される\n  / Results protected from tampering/pressure
+}
+
+class "経営層\n（上位モジュール）\n(Management / High-level Module)" as Management
+
+class "社内コンプライアンス部門\n【LSP準拠の内製化】\n(In-house Compliance Dept.)\n[LSP-Compliant In-housing]" as InternalComp #E8F5E9 {
+    + 判定基準：法的規範・判例 ✅\n  / Criteria: Legal norms & precedents ✅
+    + 独立性：取締役会直轄、事業部から分離 ✅\n  / Independence: Under Board, separated from BUs ✅
+    + 根拠：外部弁護士との連携義務あり ✅\n  / Rationale: Mandatory collaboration with external lawyers ✅
+    + 保護：内部告発保護規程により圧力を遮断 ✅\n  / Protection: Pressures blocked by whistleblower rules ✅
+}
+
+class "外部法律事務所\n【旧委託先・並存可】\n(External Law Firm)\n[Former Outsourcee / Coexistable]" as ExternalLaw #E3F2FD {
+    + 判定基準：社会的規範・判例 ✅\n  / Criteria: Social norms & precedents ✅
+    + 独立性：外部から完全に独立 ✅\n  / Independence: Completely independent externally ✅
+    + 根拠：法的論拠 ✅\n  / Rationale: Legal arguments ✅
+}
+
+Management --> IComp : 振る舞いを期待して呼び出す\n(Invokes expecting behavior)
+IComp <|.. ExternalLaw : 契約を満たす\n(Fulfills contract)
+IComp <|.. InternalComp : 契約を満たす（LSP準拠）\n(Fulfills contract [LSP Compliant])
+
+note right of InternalComp
+    <b>【LSP準拠の条件】</b>
+    「内製化」という実装の変更があっても、
+    上位（経営層）が期待する
+    振る舞いの約束を構造的に担保している。
+   
+    ---
+    <b>[Conditions for LSP Compliance]</b>
+    Even with implementation change ("In-housing"),
+    behavioral contracts expected by Management
+    are structurally guaranteed.
+   
+end note
+
+@endluml

@@ -1,0 +1,125 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml TechnicalSpecialist_ISP
+skinparam packageStyle rectangle
+skinparam backgroundColor #FAFAFA
+title "インターフェース分離の原則（ISP）違反：総合職という『全乗せインターフェース』\n[Interface Segregation Principle (ISP) Violation: The 'All-in-One Interface' of Generalist Roles]"
+top to bottom direction
+
+package "Layer1: 人事制度規程（Entities相当）\n(Layer 1: HR Regulations [Entities Equivalent])" #FFE4B5 {
+  interface "総合職インターフェース\n<<All-in-One Interface・違反状態>>\n(Generalist Interface)\n<<All-in-One Interface / Violation State>>" as SogoIF {
+    + 技術力を成長させる() / Develop technical expertise()
+    + 部下を育成する() / Nurture subordinates()
+    + 組織運営に貢献する() / Contribute to org operations()
+    + 人的マネジメントを行う() / Conduct people management()
+  }
+}
+
+package "Layer2: 評価制度（Use Cases相当）\n(Layer 2: Evaluation System [Use Cases Equivalent])" #E0F0FF {
+  class "人事評価プロセス\n(HR Evaluation Process)" as EvalProcess {
+    - 総合職インターフェース全項目を一律チェック\n  / Uniformly check all items of Generalist Interface
+    + 未実装項目を「成績不振」として記録\n  / Record unimplemented items as "Poor Performance"
+  }
+}
+
+EvalProcess --> SogoIF : 依存（分離されていない一枚岩の契約）\n(Dependency [Monolithic, unsegregated contract])
+
+package "Layer3: 採用された人材（実装クラス）\n(Layer 3: Hired Talent [Implementation Classes])" #E8FFE8 {
+  class "データ分析専門人材\n<<本来必要な実装のみ>>\n(Data Analytics Specialist)\n<<Only essential impl needed>>" as DataExpert #FFCCCC
+}
+
+SogoIF <|.. DataExpert : implements（強制）\n(implements [Forced])
+
+note right of SogoIF
+  【ISP違反の正体】
+  現場が本当に必要としているのは
+  「技術力を成長させる()」の一点のみ。
+  にもかかわらず、契約（職域）が
+  分離されておらず、無関係な
+  メソッド群への実装義務を負わされる。
+  ---
+  [True Nature of ISP Violation]
+  What the field truly needs is solely
+  "Develop technical expertise()".
+  Despite this, contracts (job scopes) are not
+  segregated, forcing implementation duties for
+  unrelated methods.
+end note
+
+note bottom of DataExpert
+  【強制実装される不要メソッド】
+  - 部下を育成する() → 未実装（部下不在）
+  - 組織運営に貢献する() → 未実装（専門特化）
+  - 人的マネジメントを行う() → 未実装
+
+  技術力は満たしているにも関わらず、
+  この3メソッドの「未実装」が
+  そのまま「成績評価の欠陥」として
+  記録されてしまう。
+  ---
+  [Unnecessary Methods Forced to Implement]
+  - Nurture subordinates() → Unimplemented (No subordinates)
+  - Contribute to org operations() → Unimplemented (Specialized)
+  - Conduct people management() → Unimplemented
+
+  Despite fulfilling technical requirements,
+  these 3 "unimplemented" methods are recorded
+  directly as "performance evaluation defects".
+end note
+
+note right of EvalProcess
+  【構造的帰結】
+  一枚岩のインターフェースを
+  全件チェックする評価プロセスが、
+  「技術は優秀・マネジメントは0点」を
+  そのまま低評価として出力する。
+  → 昇格の足かせ
+  → 優秀な専門人材の退職
+  → 組織のドメイン知識の喪失
+  ---
+  [Structural Consequences]
+  Evaluation process checking all items of a monolithic
+  interface outputs "Excellent Tech / 0 Mgmt" as a low rating.
+  → Obstacle to promotion
+  → Turnover of top specialists
+  → Loss of organizational domain knowledge
+end note
+
+package "Layer4: あるべき分離設計（To-Be・修正提案）\n(Layer 4: To-Be Separation Design [Improvement Proposal])" #D5F5E3 {
+  interface "技術専門職IF\n<<分離後>>\n(Technical Specialist IF)\n<<Segregated>>" as TechIF {
+    + 技術力を成長させる() / Develop technical expertise()
+  }
+  interface "組織管理職IF\n<<分離後>>\n(Organizational Manager IF)\n<<Segregated>>" as MgmtIF {
+    + 部下を育成する() / Nurture subordinates()
+    + 組織運営に貢献する() / Contribute to org operations()
+    + 人的マネジメントを行う() / Conduct people management()
+  }
+}
+
+DataExpert .[#green,dashed]. TechIF : "本来はこちらのみに\nimplements すべき\n(Should originally implement\nonly this one)"
+
+note bottom of TechIF
+  【ISP適用後】
+  クライアント（人材）は、自分が
+  実際に使う（担う）メソッドを
+  持つ、最小のインターフェースにのみ
+  依存すればよい。
+  技術専門職は組織管理職IFの
+  実装義務を負わない。
+  ---
+  [After Applying ISP]
+  Clients (talent) only need to depend on the minimal
+  interface containing methods they actually use (carry out).
+  Technical specialists carry no implementation obligation
+  for the Organizational Manager IF.
+end note
+
+@endluml

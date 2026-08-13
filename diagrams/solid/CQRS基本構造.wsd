@@ -1,0 +1,60 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml
+skinparam handwritten false
+skinparam componentStyle rectangle
+skinparam defaultTextAlignment center
+skinparam backgroundColor white
+
+title CQRS (コマンド・クエリ責務分離) の基本構造\n[Basic Structure of CQRS (Command Query Responsibility Segregation)]
+
+actor "要求者\n(人間)\n(Requester [Human])" as Client
+
+package "Command (命令) 系統\n(Command System)" <<Write Side>> #FFF0F0 {
+    component "コマンドモデル\n(決断・実行)\n(Command Model)\n[Decision & Execution]" as CommandModel
+    note top of CommandModel
+        **【Command（命令）】**
+        状態を変更する。
+        副作用あり。
+        不可逆な場合がある。
+        ---
+        **[Command]**
+        Changes state.
+        Has side effects.
+        Can be irreversible.
+    end note
+}
+
+package "Query (問い合わせ) 系統\n(Query System)" <<Read Side>> #F0F8FF {
+    component "クエリモデル\n(推論・参照)\n(Query Model)\n[Inference & Read]" as QueryModel
+    note top of QueryModel
+        **【Query（問い合わせ）】**
+        状態を読み取るだけ。
+        何度繰り返しても
+        副作用なし。
+        ---
+        **[Query]**
+        Only reads state.
+        No side effects,
+        no matter how many times repeated.
+    end note
+}
+
+database "組織の状態\n(データ/現実)\n(Organizational State)\n[Data / Reality]" as DB
+
+' --- 矢印とフロー ---
+Client --> CommandModel : "① 実行を指示\n(状態変更)\n(1. Directs Execution)\n[State Change]"
+Client --> QueryModel : "② 情報・選択肢を要求\n(参照のみ)\n(2. Requests Info/Options)\n[Read Only]"
+
+CommandModel -down-> DB : "状態を書き換える\n(不可逆な結果)\n(Rewrites State)\n[Irreversible Outcome]"
+DB -up-> QueryModel : "現在の状態を読み取る\n(安全な抽出)\n(Reads Current State)\n[Safe Extraction]"
+
+@enduml

@@ -1,0 +1,116 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml
+title 【LSP違反】コンプライアンス部門の内製化失敗\n"Interface名は同じ、振る舞いの約束は破られている"\n[LSP Violation - Failed In-housing of Compliance Dept.]\n"Same Interface Name, Broken Behavioral Contract"
+
+skinparam backgroundColor #FAFAFA
+skinparam DefaultFontName sans-serif
+skinparam padding 8
+
+skinparam interface {
+    BackgroundColor #E8F5E9
+    BorderColor #2E7D32
+    FontColor #1B5E20
+}
+skinparam class {
+    BackgroundColor #FFFFFF
+    BorderColor #546E7A
+}
+skinparam note {
+    BackgroundColor #FFF9C4
+    BorderColor #F9A825
+}
+
+' 上位（経営層）が依存するInterface
+interface "«Interface»\nコンプライアンス機能\n(Compliance Function)" as IComp {
+    + 独立した法的リスク判定()\n  / Independent legal risk assessment()
+    + 経営判断への情報提供()\n  / Provision of info for management decisions()
+    + 社会的説明責任の担保()\n  / Guaranteeing social accountability()
+}
+
+' 上位（依存元）
+class "経営層\n（上位モジュール）\n(Management / High-level Module)" as Management {
+    「コンプライアンス部門に\n 確認した」という記録のみ信頼
+    ---
+    Trusts only record saying
+    "Confirmed with Compliance Dept."
+}
+
+' LSP違反の実装
+class "社内コンプライアンス部門\n【内製化・新設】\n(In-house Compliance Dept.)\n[In-housed / Newly Established]" as InternalComp #FFE0E0 {
+    - 判定基準：プロセスの通りやすさ ❌\n  / Criteria: Ease of passing process ❌
+    - 独立性：社内の圧力の影響 ❌\n  / Independence: Affected by internal pressure ❌
+    - 根拠：前例踏襲 ❌\n  / Rationale: Precedent-following ❌
+}
+
+' 本来あるべき実装（比較用）
+class "外部法律事務所\n【旧委託先】\n(External Law Firm)\n[Former Outsourcee]" as ExternalLaw #E3F2FD {
+    + 判定基準：社会的規範・判例 ✅\n  / Criteria: Social norms & precedents ✅
+    + 独立性：外部から完全に独立 ✅\n  / Independence: Completely independent externally ✅
+    + 根拠：法的論拠 ✅\n  / Rationale: Legal arguments ✅
+}
+
+Management --> IComp : 振る舞いを期待して動かす\n(Invokes expecting behavior)
+IComp <|.. ExternalLaw : 契約を満たす（LSP準拠）\n(Fulfills contract [LSP Compliant])
+IComp <|.. InternalComp : 契約を満たすと見せかける（LSP違反）\n(Feigns fulfilling contract [LSP Violation])
+
+note right of InternalComp
+    <b>【LSP違反の本質】</b>
+    「コンプライアンス部門」という
+    Interface名（役職・組織名）は同じ。
+    
+    しかし上位（経営層）が期待する
+    「振る舞いの約束（契約）」：
+    ・独立した判断
+    ・法的根拠
+    ・社会的説明責任
+    
+    これらが内部で破られている。
+    
+    経営層は「確認した」と信じているが、
+    実態として契約は履行されていない状態。
+    ---
+    <b>[Essence of LSP Violation]</b>
+    The Interface name (title/org name)
+    "Compliance Dept." is identical.
+    
+    However, the "behavioral contract" expected
+    by high-level (Management):
+    ・Independent judgment
+    ・Legal grounds
+    ・Social accountability
+    are violated internally.
+    
+    Management believes they "confirmed",
+    but in reality, the contract is unfulfilled.
+end note
+
+note bottom of Management
+    <b>【経営問題へのエスカレーションリスク】</b>
+    不祥事が発生した場合
+    ↓
+    「コンプライアンス部門が承認した」
+    ↓
+    追跡すると「事業部の圧力下での承認」が判明
+    ↓
+    経営責任が問われる
+    ---
+    <b>[Escalation Risk to Management Issues]</b>
+    Scandal occurs
+    ↓
+    "Approved by Compliance Dept."
+    ↓
+    Traced to "Approval under BU pressure"
+    ↓
+    Management held accountable
+end note
+
+@endluml

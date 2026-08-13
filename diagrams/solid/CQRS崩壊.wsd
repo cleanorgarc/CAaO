@@ -1,0 +1,66 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml
+skinparam handwritten false
+skinparam componentStyle rectangle
+skinparam defaultTextAlignment center
+skinparam backgroundColor white
+
+title CQRS崩壊：AIが自律的に決定・実行する状態\n[CQRS Collapse: State Where AI Autonomously Decides and Executes]
+
+actor "人間\n(管理職)\n(Human Manager)" as Human
+
+package "AI (境界なし)\n(AI [No Boundary])" <<Collapsed>> #FFE0E0 {
+    component "AIエージェント\n(Query + Command 混在)\n(AI Agent)\n[Mixed Query + Command]" as AI
+    note left of AI
+        **【設計ミス】**
+        Queryのはずが
+        Commandも実行している。
+        
+        責任の所在：消滅。
+        不可逆な結果：誰のもの？
+        ---
+        **[Design Error]**
+        Supposed to be Query, but
+        executing Command as well.
+        
+        Accountability: Vanished.
+        Irreversible outcomes: Whose responsibility?
+    end note
+}
+
+database "組織の状態\n(データ/現実)\n(Organizational State)\n[Data / Reality]" as DB
+
+' --- AI自律ループ ---
+AI -down-> DB : "③ 自ら判断し、状態を書き換える\n(不可逆な実行)\n(3. Autonomously judges & rewrites state)\n[Irreversible execution]"
+DB -up-> AI : "① 現在の状態を読み取る\n(1. Reads current state)"
+AI -> AI : "② 自律的に決断する\n(人間の承認なし)\n(2. Autonomously decides)\n[Without human approval]"
+
+' --- 人間は蚊帳の外 ---
+Human .up.> AI : "④ 事後に通知を受ける\n（決定権なし）\n(4. Receives post-hoc notification)\n[No decision-making power]"
+
+note bottom of DB
+    **このとき何が失われるか**
+    ──────────────────
+    【CQRS崩壊】 QueryとCommandの境界が消える
+    【IoC崩壊】  人間がCallしていない。AIが勝手に動く
+    【DIP崩壊】  AIの判断基準がAI自身の中に閉じている
+    【SRP崩壊】  「推論」と「決断」が同一モジュールに混在
+    ---
+    **What is Lost in This State**
+    ──────────────────
+    [CQRS Collapse] Boundary between Query and Command disappears
+    [IoC Collapse]  Humans are not calling it; AI operates on its own
+    [DIP Collapse]  AI's decision criteria are encapsulated within itself
+    [SRP Collapse]  "Inference" and "Decision" mixed in the same module
+end note
+
+@endluml

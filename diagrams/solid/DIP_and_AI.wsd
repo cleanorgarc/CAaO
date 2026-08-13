@@ -1,0 +1,63 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml
+skinparam handwritten false
+skinparam classAttributeIconSize 0
+skinparam defaultTextAlignment center
+
+title DIP（依存関係逆転の原則）とAIガバナンスへの写像\n[Mapping DIP (Dependency Inversion Principle) to AI Governance]
+
+' --- 悪い設計（DIP違反：AIへの隷属） ---
+package "❌ 悪い設計 (DIP違反：AIへの隷属)\n(Bad Design: DIP Violation - Servitude to AI)" {
+    class "人間 (管理職)\n(Human Manager)" as BadHuman <<上位モジュール / High-level Module>>
+    class "AIの出力結果\n(AI Output Result)" as BadAI <<下位モジュール・具体 / Low-level Module & Concretion>>
+
+    BadHuman -down-> BadAI : 依存（言いなり）\n(Dependency [Blind Obedience])
+
+    note right of BadHuman
+        「AIがそう言ったから」で
+        決断を下す最悪のバグ。
+        上位の人間が、下位の具体（AI）に
+        直接依存してしまっている。
+        ---
+        The worst bug: making decisions
+        because "the AI said so".
+        High-level human directly depends on
+        low-level concretions (AI).
+    end note
+}
+
+' --- 良い設計（DIP適用：ポリシーへの依存） ---
+package "⭕ 良い設計 (DIP適用：正しいガバナンス)\n(Good Design: DIP Applied - Proper Governance)" {
+    class "人間 (管理職)\n(Human Manager)" as GoodHuman <<上位モジュール / High-level Module>>
+    interface "評価基準・ポリシー\n(Evaluation Standards & Policy)" as Policy <<抽象・Interface / Abstraction & Interface>>
+    class "AIの推論\n(AI Inference)" as GoodAI <<下位モジュール・具体 / Low-level Module & Concretion>>
+
+    ' 人間はポリシーを定義・依存する
+    GoodHuman -down-> Policy : 依存（定義・判断基準）\n(Dependency [Definition & Decision Criteria])
+    
+    ' AIもポリシーに依存（遵守）する方向へ逆転
+    GoodAI -up-|> Policy : 依存（遵守・実装）\n(Dependency [Compliance & Impl])
+
+    note right of Policy
+        人間が定義したポリシー（抽象）に、
+        人間もAIも依存する。
+        AIはポリシーの枠内で推論し、
+        人間はポリシーを基準に決断する。
+        ---
+        Both human and AI depend on the
+        human-defined policy (abstraction).
+        AI infers within policy boundaries,
+        and human decides based on policy criteria.
+    end note
+}
+
+@endluml

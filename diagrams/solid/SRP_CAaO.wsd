@@ -1,0 +1,67 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml
+skinparam actorStyle awesome
+skinparam componentStyle uml2
+
+title 組織構造の単一責任原則（SRP）の比較\n[Comparison of Single Responsibility Principle (SRP) in Organizational Structure]
+
+' 共通の目的（KGI）
+node "【全社共通目標(KGI)】市場シェア拡大\n([Company-wide Goal (KGI)] Market Share Expansion)" as KGI {
+}
+
+package "悪い例：責任の混在 (God Object Dept)\n(Bad Example: Mixed Responsibilities)" {
+    [営業・支援・開発部\n(Sales, Support & Dev Dept.)] as GD
+    actor "経営層(数値要求)\n(Management [Numeric Demands])" as M1
+    actor "顧客(クレーム)\n(Customers [Complaints])" as C1
+    actor "開発(技術制約)\n(Dev [Technical Constraints])" as T1
+    
+    M1 --> GD : 利益目標の要求\n(Profit target demands)
+    C1 --> GD : 品質改善の要求\n(Quality improvement demands)
+    T1 --> GD : 技術的制約\n(Technical constraints)
+    
+    note bottom of GD
+        責任が混在：
+        「誰の都合で変更するか」が不明確
+        -> 優先順位の調整コストが爆発
+        ---
+        Mixed Responsibilities:
+        Unclear "for whose sake changes are made"
+        -> Priority coordination costs explode
+    end note
+}
+
+package "良い例：責務の分離 (SRP Compliant)\n(Good Example: Separation of Responsibilities)" {
+    [営業部\n(Sales Dept.)] as SD
+    [カスタマーサポート部\n(Customer Support Dept.)] as CPD
+    actor "経営層(数値要求)\n(Management [Numeric Demands])" as M2
+    actor "顧客(クレーム)\n(Customers [Complaints])" as C2
+    
+    M2 --> SD : 利益目標の要求\n(Profit target demands)
+    C2 --> CPD : 品質改善の要求\n(Quality improvement demands)
+    SD ..> CPD : 連携(必要時のみ)\n(Collaboration [Only when necessary])
+    
+    note bottom of SD
+        役割が専門化：
+        変更理由が1つに限定
+        -> 意思決定が高速化
+        ---
+        Specialized Roles:
+        Limited to a single reason for change
+        -> Decision-making speeds up
+    end note
+}
+
+KGI ..> GD
+KGI ..> SD
+KGI ..> CPD
+
+@enduml

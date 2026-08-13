@@ -1,0 +1,79 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml PotatoChip_OCP
+skinparam packageStyle rectangle
+skinparam backgroundColor #FAFAFA
+title "オープン・クローズドの原則（OCP）：ポテトチップス製造部門とパッケージ部門の写像\n[Open/Closed Principle (OCP): Mapping Potato Chip Manufacturing & Packaging Depts]"
+top to bottom direction
+
+package "Layer1: 変わらない規程（抽象・Entities相当）\n(Layer 1: Unchanging Rules [Abstract / Entities Equivalent])" #FFE4B5 {
+  interface "袋規格インターフェース\n<<抽象規程・不変>>\n(Bag Standard Interface)\n<<Abstract Rule / Unchanging>>" as BagIF {
+    + 中身を保護する() / Protect contents()
+    + 食品表示を満たす() / Satisfy food labeling()
+  }
+}
+
+package "Layer2: ポテトチップス製造部門（閉じている領域）\n(Layer 2: Potato Chip Manufacturing Dept [Closed Domain])" #E0F0FF {
+  class "製造プロセス\n<<Closed for Modification>>\n(Manufacturing Process)" as Process {
+    - 揚げる・味付けする・充填する / Fry, Season, Fill
+    + 袋規格インターフェースにのみ依存 / Depends only on Bag Standard Interface
+  }
+}
+
+Process --> BagIF : 依存（抽象にのみ準拠）\n(Dependency [Conforms to abstraction only])
+
+package "Layer3: パッケージ部門（拡張される領域）\n(Layer 3: Packaging Dept [Open for Extension Domain])" #E8FFE8 {
+  class "従来の透明袋\n<<既存実装>>\n(Conventional Clear Bag)\n<<Existing Impl>>" as OldBag
+  class "白黒袋（新ルール）\n<<Open for Extension>>\n(Monochrome Bag [New Rule])" as NewBag #FFCCCC
+}
+
+BagIF <|.. OldBag : implements
+BagIF <|.. NewBag : implements\n（新規追加・差し替え）\n(New Addition / Replacement)
+
+note left of BagIF
+  【OCPの肝】
+  「中身を保護して食品表示を満たす袋」
+  という抽象規程は変更されない。
+  製造部門はこの抽象にのみ依存している。
+  ---
+  [Core of OCP]
+  The abstract rule "a bag that protects contents
+  and satisfies food labeling" remains unchanged.
+  The manufacturing dept depends solely on this abstraction.
+end note
+
+note left of Process
+  【Closed（修正への閉鎖）】
+  パッケージのルールが白黒袋に
+  差し替わっても、製造プロセス側の
+  コード（業務ルール）には
+  一切の修正が発生しない。
+  ---
+  [Closed for Modification]
+  Even if packaging rules switch to monochrome bags,
+  zero modifications occur in the manufacturing process
+  code (business rules).
+end note
+
+note bottom of NewBag
+  【Open（拡張への開放）】
+  パッケージ部門は、既存の
+  透明袋クラスを壊すことなく、
+  新しい「白黒袋」クラスを
+  追加（拡張）するだけでよい。
+  ---
+  [Open for Extension]
+  The packaging dept simply needs to add (extend)
+  the new "Monochrome Bag" class without breaking
+  the existing clear bag class.
+end note
+
+@endluml

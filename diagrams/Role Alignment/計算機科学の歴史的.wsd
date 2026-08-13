@@ -1,0 +1,43 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+    RoundCorner 10
+}
+skinparam defaultTextAlignment center
+
+rectangle "計算機科学の歴史的ツール\nHistorical Software Tools\n(Compiler, Debugger, VCS, etc.)" as History #F8F9F9 {
+    card "✅ 人間の認知負荷を下げる\nReduce human cognitive load" as H1 #E8F8F5
+    card "✅ 欠陥を早期に見つける\nDetect defects early" as H2 #E8F8F5
+    card "✅ 変更を安全にする\nMake changes safely" as H3 #E8F8F5
+    H1 -[hidden]down-> H2
+    H2 -[hidden]down-> H3
+}
+
+rectangle "生成AIによるノーコード/ローコード開発\nGen-AI No-code / Low-code Development" as AI #F8F9F9 {
+    card "✅ 人間の認知負荷を下げる\nReduce human cognitive load" as A1 #E8F8F5
+    card "✅ 欠陥を早期に見つける\nDetect defects early" as A2 #E8F8F5
+    card "❌ 変更を安全にする手段の欠落\nLack of methods to make changes safely\n(Governance methods lacking)" as A3 #FDEDEC
+    A1 -[hidden]down-> A2
+    A2 -[hidden]down-> A3
+}
+
+History -[hidden]right-> AI
+
+note bottom of A3
+  <b>【不安感・恐怖感の正体 / The True Nature of Anxiety】</b>
+  変更を安全にコントロールする手立てがまだ発展途上である
+  Methods to safely control changes are still underdeveloped.
+end note
+
+@enduml
