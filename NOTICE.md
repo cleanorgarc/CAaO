@@ -40,6 +40,19 @@ policy, or confidential business matter.
 本リポジトリは、特定の組織、顧客、製品、案件、内部方針または非公開の事業事項を
 評価、批判、診断またはコンサルティングすることを目的としません。
 
+## Diagnostic insights
+
+Diagrams, cases, and worksheets may incorporate diagnostic insights
+generalized from practice or published examples. However, any material
+published here is anonymized and abstracted, and is not intended to directly
+identify, evaluate, criticize, or diagnose specific organizations, customers,
+or projects.
+
+図、ケースおよびワークシートには、実務経験や公開された事例から一般化された
+「診断上の知見」が反映される場合があります。ただし、本リポジトリに掲載する
+素材は匿名化および抽象化を行ったものであり、特定の組織、顧客、案件を直接
+識別・評価・批判・診断することを意図したものではありません。
+
 ## Disclaimer
 
 The content is provided for learning, research, discussion, and conceptual
