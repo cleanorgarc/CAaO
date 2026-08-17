@@ -1,0 +1,48 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml
+skinparam defaultTextAlignment center
+skinparam shadowing false
+skinparam monochrome true
+skinparam packageStyle rectangle
+
+package "Use Cases層 / Entities層\n【価値判断・結果責任・統制】\n(Use Cases & Entities Layers)\n[Value Judgment, Accountability & Governance]" as Layer_Human {
+    node "リアル組織\n(Real-world Org)" as RealOrg {
+        component "CFO / CAXO\nリアル組織長\n(Real Org Leaders)" as RealLeaders
+    }
+    note right of RealLeaders
+        ・意思と決断
+        ・アクションの実行
+        ・最終評価と承認
+        ---
+        ・Intent & Decisions
+        ・Action Execution
+        ・Final Evaluation & Approval
+    end note
+}
+
+package "Interface Adapter層\n【情報変換・自律処理・翻訳】\n(Interface Adapter Layer)\n[Data Transformation, Autonomous Processing & Translation]" as Layer_AI {
+    node "コーポレートAI・Workforce部門\n（カプセル化されたコンポーネント）\n(Corporate AI & Workforce Dept.)\n[Encapsulated Component]" as AIOrg {
+        component "AI部門長\n(AI Head of Dept.)" as AIHead
+        component "AIボード\n(AI Board)" as AIBoard
+        component "AIマネージャー\n(AI Manager)" as AIManager
+        component "AI社員\n(AI Employee)" as AIEmployee
+        
+        AIHead -down-> AIBoard : 評価・審議\n(Evaluation & Deliberation)
+        AIHead -down-> AIManager : 指示\n(Instruction)
+        AIManager -down-> AIEmployee : タスク分割\n(Task Breakdown)
+    }
+}
+
+RealLeaders =down=> AIHead : 業務依頼・方針の入力\n（依存と制御の方向）\n(Work Requests & Policy Inputs)\n[Direction of Dependency & Control]
+AIOrg .up.> RealLeaders : レポート自動送付・可視化\n（データの戻り）\n(Automated Reporting & Visualization)\n[Return of Data]
+
+@enduml
