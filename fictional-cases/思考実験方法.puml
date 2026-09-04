@@ -1,0 +1,22 @@
+' Copyright (c) 2026 yamatee
+' CAaO — Clean Architecture as Organizations
+' License: CC BY-NC 4.0
+' https://creativecommons.org/licenses/by-nc/4.0/
+' Attribution: "yamatee, CAaO"
+' Commercial use requires prior written permission.
+
+' SPDX-FileCopyrightText: 2026 yamatee
+' SPDX-License-Identifier: CC-BY-NC-4.0
+
+@startuml
+skinparam DefaultFontName Meiryo
+actor "著者\n(Author)" as User
+participant "GameMaster AI\n(問題生成 / Problem Generation)" as GM
+participant "コンサルタント AI\n(静的解析 / Static Analysis)" as Cons
+
+User -> GM: 架空企業の財務・業務トラブル生成を指示\n(Instruct to generate financial & operational troubles)
+GM --> User: 【純粋な現状レポート】提出\n(Submit [Pure Current Status Report])
+User -> Cons: レポートのみを入力し、CAaOでの解析を指示\n(Input only the report and instruct analysis with CAaO)
+note right: 事前文脈や結論の裏合わせなし\n(No prior context or alignment on conclusions)
+Cons --> User: 【構造上の問題と処方箋】抽出\n(Extract [Structural Issues & Design Options])
+@enduml
