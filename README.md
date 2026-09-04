@@ -7,6 +7,13 @@
 > but to use the vocabulary of software design as a lens for observing
 > organizational structures and facilitating dialogue about them.
 
+## 背景・解説記事
+
+CAaOの背景、問題意識、図の読み方および連載記事は、noteで公開しています。
+
+- [CAaO連載・著者プロフィール](https://note.com/cleanorgarc/magazines)
+
+
 ## CAaOとは
 
 CAaO（Clean Architecture as Organizations）は、組織における責務、依存関係、
@@ -74,6 +81,18 @@ the impact of change through selected vocabulary from software design.
 This repository provides diagrams, entirely fictional case studies, worksheets,
 and reference materials for describing organizational structures and forming
 hypotheses for dialogue, diagnosis, and improvement.
+
+## Background and articles 
+
+This repository contains the source materials for CAaO, including PlantUML
+source files, generated diagrams, fictional cases, worksheets, references,
+and license information.
+
+For the background, interpretation, and related articles, see the CAaO series
+on note.
+
+- [CAaO series on note / Author profile](https://note.com/cleanorgarc/magazines)
+
 
 ## What CAaO is not
 
